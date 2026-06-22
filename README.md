@@ -1,2 +1,1 @@
-<<<<<<< HEAD
-#projeto_teste_para_github
+projeto_teste_para_github
