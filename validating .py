@@ -5,6 +5,7 @@ def Validating(DataInput):
         if len(DataInput) != 6:
             return False
         return True
+
 print('write here what you want to do and when')
 task = input()
 
