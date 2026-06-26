@@ -7,10 +7,20 @@ def CliMenu():
     print("5 | Delete")
 
 TempTask = {}
+TaskId = 1
 
 CliMenu()
+user_input = input("Enter your choice: ")
+if user_input == "1":
+    TempTask["id"] = TaskId
+    TaskId += 1
+    TempTask["name"] = input("Enter task name: ")
+    valid_status = ["todo", "done", "in progress"]
+    
+    TempTask["status"] = input("Enter task status: todo, done or in progress: ")   
 
-
+print(TempTask)
+print(TaskId)
 
 
 
