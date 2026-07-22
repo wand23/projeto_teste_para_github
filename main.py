@@ -1,26 +1,56 @@
 import argparse, json
 from datetime import datetime
 
-parser = argparse.ArgumentParser(description="A simple command-line tool.")
+#main parser
+parser = argparse.ArgumentParser(description="Task CLI")
 
-parser.add_argument("id", type=int)
-parser.add_argument("task", type=str)
-parser.add_argument("status", type=str)
+#subparser group for add, list, delete commands
+subparser = parser.add_subparsers(dest="command", required=True, help="Available commands")
+
+add_parser = subparser.add_parser("add")
+add_parser.add_argument("task", type=str)
+add_parser.add_argument("--status", default="todo", choices=["todo", "done", "in progress"])
+
+list_parser = subparser.add_parser("list")
+
+delete_parser = subparser.add_parser("delete")
+delete_parser.add_argument("id", type=int)
 
 args = parser.parse_args()
 
 
-createdAT = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-updatedAt = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-task_dict= {
-  "id": args.id,
+
+if args.command == "add":
+  with open("task.json", "r") as file:
+    tasks = json.load(file)
+  new_id = max(tasks["id"] for tasks in tasks) + 1 if tasks else 1
+
+  createdAT = datetime.now().strftime("%Y-%m-%d %H:%M:%S") 
+  updatedAt = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+  task_dict= {
+  "id": new_id,
   "task": args.task,
   "status": args.status,
   "createdAt":createdAT,
   "updatedAt":updatedAt,
 }
 
+  with open("task.json", "w") as file:
+    json.dump(tasks + [task_dict], file, indent=4)    
+    
+elif args.command == "list":
+  print("placeholder")
+
+elif args.command == "delete":
+  print("placeholder")
+
+
+
+
+
 
 print(task_dict)
+print("tasks added successfully")
 
