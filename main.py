@@ -9,13 +9,16 @@ subparser = parser.add_subparsers(dest="command", required=True, help="Available
 
 add_parser = subparser.add_parser("add")
 add_parser.add_argument("task", type=str)
-add_parser.add_argument("--status", default="todo", choices=["todo", "done", "in progress"])
+add_parser.add_argument("--status", choices=["todo", "done", "in progress"], required=True)
 
 list_parser = subparser.add_parser("list")
 list_parser.add_argument("id", type=int)
 
 delete_parser = subparser.add_parser("delete")
 delete_parser.add_argument("id", type=int)
+
+update_parser = subparser.add_parser("update")
+
 
 args = parser.parse_args()
 
@@ -27,7 +30,7 @@ if args.command == "add":
   
   new_id = max(tasks["id"] for tasks in tasks) + 1 if tasks else 1
 
-  createdAT = datetime.now().strftime("%Y-%m-%d %H:%M:%S") 
+  createdAT = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
   updatedAt = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
   task_dict= {
@@ -40,12 +43,18 @@ if args.command == "add":
 
   with open("task.json", "w") as file:
     json.dump(tasks + [task_dict], file, indent=4)    
+  print(f"Task added successfully with ID: {new_id}")
 
-  print(task_dict)
-  print("tasks added successfully")
-    
 elif args.command == "list":
-  print(type(tasks))
+  for task in tasks:
+    if task["id"] == args.id:
+      print(f"ID: {task['id']}")
+      print(f"Task: {task['task']}")
+      print(f"Status: {task['status']}")
+      print(f"Created At: {task['createdAt']}")
+      print(f"Updated At: {task['updatedAt']}")
 
 elif args.command == "delete":
-  print("placeholder")
+  updated_tasks = [task for task in tasks if task["id"] != args.id]
+  with open("task.json", "w") as file:
+    json.dump(updated_tasks, file, indent=4)
